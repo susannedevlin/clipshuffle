@@ -124,3 +124,10 @@ function skipToNext() {
   currentIndex = (currentIndex + 1) % videoList.length;
   playRandomClip();
 }
+
+function switchPlaylist(name) {
+  if (!PLAYLISTS[name]) return alert("Playlist not found");
+  PLAYLIST_ID = PLAYLISTS[name];
+  loadPlaylist(); // Reloads and shuffles the new playlist
+}
+
