@@ -53,7 +53,7 @@ async function fetchPlaylistItems(playlistId) {
 
 // Load the playlist and shuffle it
 async function loadPlaylist() {
-  const pid = document.getElementById("playlistIdInput").value.trim();
+  const pid = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR";
   if (!pid) return alert("Please enter a Playlist ID");
 
   const fetchedVideos = await fetchPlaylistItems(pid);
