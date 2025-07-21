@@ -1,11 +1,13 @@
 // ── CONFIG ─────────────────────────────────────
 const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8";
 
-let PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // default
+let PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // default playlist
+
 const PLAYLISTS = {
   "Latin": "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR",
   "Music Mixes": "PLfrFfCKLZiB63G86e-6IS-e-vQTmnqg7A"
 };
+
 // ───────────────────────────────────────────────
 
 let videoList = [];
