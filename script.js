@@ -36,6 +36,15 @@ async function fetchPlaylistItems(playlistId) {
   return results.map(id => ({ id }));
 }
 
+function shuffleArray(arr) {
+  // Fisher–Yates shuffle
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 // 2) Called when you click “Load Playlist”
 async function loadPlaylist() {
   const pid = "PLfrFfCKLZiB4dVDHOFWelQxgqR_iYqps6";  // ← Replace with your playlist ID
@@ -96,13 +105,4 @@ function skipToNext() {
   if (timeoutId) clearTimeout(timeoutId);
   currentIndex = (currentIndex + 1) % videoList.length;
   playRandomClip();
-}
-
-function shuffleArray(arr) {
-  // Fisher–Yates shuffle
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
 }
