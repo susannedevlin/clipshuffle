@@ -163,6 +163,15 @@ function skipToNext() {
 // Switch between playlist buttons
 function switchPlaylist(name) {
   if (!PLAYLISTS[name]) return alert("Playlist not found");
+
   PLAYLIST_ID = PLAYLISTS[name];
   loadPlaylist();
+
+  // Visually update the selected button
+  const buttons = document.querySelectorAll(".playlist-button");
+  buttons.forEach(btn => btn.classList.remove("active"));
+
+  const clickedBtn = document.querySelector(`button[data-playlist="${name}"]`);
+  if (clickedBtn) clickedBtn.classList.add("active");
 }
+
