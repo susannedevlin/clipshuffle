@@ -1,5 +1,6 @@
 // ── CONFIG ─────────────────────────────────────
-const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8"; // Replace with your YouTube Data API key
+const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8"; // Replace with your actual API key
+const PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // Your fixed playlist
 // ───────────────────────────────────────────────
 
 let videoList = [];
@@ -8,7 +9,7 @@ let player;
 let timeoutId = null;
 let isPlayerReady = false;
 
-// Shuffle function (Fisher–Yates)
+// Shuffle function
 function shuffleArray(array) {
   let currentIndex = array.length, randomIndex;
 
@@ -23,7 +24,7 @@ function shuffleArray(array) {
   return array;
 }
 
-// Fetch all video IDs from playlist
+// Fetch all videos from playlist
 async function fetchPlaylistItems(playlistId) {
   let results = [];
   let token = "";
@@ -51,15 +52,12 @@ async function fetchPlaylistItems(playlistId) {
   return results.map(id => ({ id }));
 }
 
-// Load the playlist and shuffle it
+// Load the playlist, shuffle it, and start playing
 async function loadPlaylist() {
-  const pid = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR";
-  if (!pid) return alert("Please enter a Playlist ID");
-
-  const fetchedVideos = await fetchPlaylistItems(pid);
+  const fetchedVideos = await fetchPlaylistItems(PLAYLIST_ID);
   if (!fetchedVideos.length) return;
 
-  videoList = shuffleArray(fetchedVideos); // ✅ Shuffle here
+  videoList = shuffleArray(fetchedVideos);
   currentIndex = 0;
 
   if (player && isPlayerReady) {
@@ -69,9 +67,9 @@ async function loadPlaylist() {
   }
 }
 
-// YouTube player creation
+// Create YouTube player
 function onYouTubeIframeAPIReady() {
-  // Wait until we call createPlayer()
+  loadPlaylist(); // ✅ Autoload when API is ready
 }
 
 function createPlayer() {
@@ -88,12 +86,12 @@ function createPlayer() {
   });
 }
 
-// Get a random start time between 30s–150s
+// Get random clip start time
 function getRandomStart() {
   return Math.floor(30 + Math.random() * 120);
 }
 
-// Play 60-second clip and move to next
+// Play 60-second random clip
 function playRandomClip() {
   if (timeoutId) clearTimeout(timeoutId);
 
@@ -107,7 +105,7 @@ function playRandomClip() {
   }, 60000);
 }
 
-// Manual skip button
+// Manual skip button (if you keep one)
 function skipToNext() {
   if (timeoutId) clearTimeout(timeoutId);
   currentIndex = (currentIndex + 1) % videoList.length;
