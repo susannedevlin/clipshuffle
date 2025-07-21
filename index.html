@@ -2,16 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Make it responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ClipShuffler</title>
+  <!-- Link your stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🎵 YouTube ClipShuffler</h1>
+  <div class="container">
+    <h1>🎵 YouTube ClipShuffler</h1>
 
-  <textarea id="playlistInput" rows="5" cols="60" placeholder="Paste YouTube URLs here, one per line"></textarea><br>
-  <button onclick="loadPlaylist()">Load Playlist</button>
-  <button onclick="skipToNext()">⏭️ Skip</button>
+    <textarea id="playlistInput" placeholder="Paste YouTube URLs here, one per line"></textarea>
 
-  <div id="player" style="margin-top: 20px;"></div>
+    <div class="controls">
+      <button id="loadBtn" onclick="loadPlaylist()">Load Playlist</button>
+      <button id="skipBtn" onclick="skipToNext()">⏭️ Skip</button>
+    </div>
+
+    <div id="playerWrapper">
+      <div id="player"></div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
   <script src="https://www.youtube.com/iframe_api"></script>
