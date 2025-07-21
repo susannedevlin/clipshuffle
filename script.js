@@ -88,7 +88,7 @@ function createPlayer() {
 
 // Get random clip start time
 function getRandomStart() {
-  return Math.floor(30 + Math.random() * 120);
+  return Math.floor(30 + Math.random() * 1800);
 }
 
 // Play 60-second random clip
