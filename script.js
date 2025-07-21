@@ -1,6 +1,6 @@
 // ── CONFIG ─────────────────────────────────────
-const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8";  
-// ────────────────────────────────────────────────
+const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8"; // Replace with your YouTube Data API key
+// ───────────────────────────────────────────────
 
 let videoList = [];
 let currentIndex = 0;
@@ -8,7 +8,22 @@ let player;
 let timeoutId = null;
 let isPlayerReady = false;
 
-// 1) Fetch all videos in the playlist (first 50; handles pagination)
+// Shuffle function (Fisher–Yates)
+function shuffleArray(array) {
+  let currentIndex = array.length, randomIndex;
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]
+    ];
+  }
+
+  return array;
+}
+
+// Fetch all video IDs from playlist
 async function fetchPlaylistItems(playlistId) {
   let results = [];
   let token = "";
@@ -36,24 +51,17 @@ async function fetchPlaylistItems(playlistId) {
   return results.map(id => ({ id }));
 }
 
-function shuffleArray(arr) {
-  // Fisher–Yates shuffle
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-// 2) Called when you click “Load Playlist”
+// Load the playlist and shuffle it
 async function loadPlaylist() {
-  const pid = "PLfrFfCKLZiB4dVDHOFWelQxgqR_iYqps6";  // ← Replace with your playlist ID
+  const pid = document.getElementById("playlistIdInput").value.trim();
   if (!pid) return alert("Please enter a Playlist ID");
 
-  videoList = shuffleArray(await fetchPlaylistItems(pid));
-  if (!videoList.length) return;
+  const fetchedVideos = await fetchPlaylistItems(pid);
+  if (!fetchedVideos.length) return;
 
+  videoList = shuffleArray(fetchedVideos); // ✅ Shuffle here
   currentIndex = 0;
+
   if (player && isPlayerReady) {
     playRandomClip();
   } else {
@@ -61,12 +69,11 @@ async function loadPlaylist() {
   }
 }
 
-// 3) Init YouTube IFrame player
+// YouTube player creation
 function onYouTubeIframeAPIReady() {
-  // We wait until loadPlaylist() before creating the player
+  // Wait until we call createPlayer()
 }
 
-// 4) Create the player only after we know videoList
 function createPlayer() {
   player = new YT.Player("player", {
     height: "360",
@@ -81,12 +88,12 @@ function createPlayer() {
   });
 }
 
-// 5) Pick a random start between 30s and 150s
+// Get a random start time between 30s–150s
 function getRandomStart() {
   return Math.floor(30 + Math.random() * 120);
 }
 
-// 6) Play a 60-second clip and auto-advance
+// Play 60-second clip and move to next
 function playRandomClip() {
   if (timeoutId) clearTimeout(timeoutId);
 
@@ -100,7 +107,7 @@ function playRandomClip() {
   }, 60000);
 }
 
-// 7) Manual skip button
+// Manual skip button
 function skipToNext() {
   if (timeoutId) clearTimeout(timeoutId);
   currentIndex = (currentIndex + 1) % videoList.length;
