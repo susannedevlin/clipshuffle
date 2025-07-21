@@ -1,5 +1,5 @@
 // ── CONFIG ─────────────────────────────────────
-const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8"; // Replace with your actual key
+const YT_API_KEY = "AIzaSyCk7k9X9Q7OwfzeHbPucaFrdGAuI-JugDk"; // Replace with your actual key
 
 let PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // default playlist
 
