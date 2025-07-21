@@ -1,5 +1,5 @@
 // ── CONFIG ─────────────────────────────────────
-const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8";
+const YT_API_KEY = "YOUR_API_KEY_HERE"; // Replace with your actual key
 
 let PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // default playlist
 
@@ -7,7 +7,6 @@ const PLAYLISTS = {
   "Latin": "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR",
   "Music Mixes": "PLfrFfCKLZiB63G86e-6IS-e-vQTmnqg7A"
 };
-
 // ───────────────────────────────────────────────
 
 let videoList = [];
@@ -16,7 +15,7 @@ let player;
 let timeoutId = null;
 let isPlayerReady = false;
 
-// Shuffle function
+// Shuffle array in place
 function shuffleArray(array) {
   let currentIndex = array.length, randomIndex;
   while (currentIndex !== 0) {
@@ -29,10 +28,21 @@ function shuffleArray(array) {
   return array;
 }
 
-// Fetch all videos from playlist
+// Parse ISO 8601 (e.g. "PT25M30S") to seconds
+function parseISODurationToSeconds(iso) {
+  const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  const hours = parseInt(match[1] || "0");
+  const minutes = parseInt(match[2] || "0");
+  const seconds = parseInt(match[3] || "0");
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
+// Fetch video IDs from playlist, then fetch their durations
 async function fetchPlaylistItems(playlistId) {
-  let results = [];
+  let videoIds = [];
   let token = "";
+
+  // Step 1: Get all video IDs from the playlist
   do {
     const url = new URL("https://www.googleapis.com/youtube/v3/playlistItems");
     url.search = new URLSearchParams({
@@ -50,14 +60,39 @@ async function fetchPlaylistItems(playlistId) {
       alert("Error fetching playlist:\n" + data.error.message);
       return [];
     }
-    data.items.forEach(item => results.push(item.contentDetails.videoId));
+
+    data.items.forEach(item => videoIds.push(item.contentDetails.videoId));
     token = data.nextPageToken || "";
   } while (token);
 
-  return results.map(id => ({ id }));
+  // Step 2: Get durations using Videos endpoint
+  const results = [];
+  const chunkSize = 50;
+
+  for (let i = 0; i < videoIds.length; i += chunkSize) {
+    const chunk = videoIds.slice(i, i + chunkSize);
+    const url = new URL("https://www.googleapis.com/youtube/v3/videos");
+    url.search = new URLSearchParams({
+      part: "contentDetails",
+      id: chunk.join(","),
+      key: YT_API_KEY,
+    }).toString();
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    data.items.forEach(item => {
+      const id = item.id;
+      const isoDuration = item.contentDetails.duration;
+      const duration = parseISODurationToSeconds(isoDuration);
+      results.push({ id, duration });
+    });
+  }
+
+  return results;
 }
 
-// Load the playlist, shuffle it, and start playing
+// Load playlist and start playback
 async function loadPlaylist() {
   const fetchedVideos = await fetchPlaylistItems(PLAYLIST_ID);
   if (!fetchedVideos.length) return;
@@ -66,17 +101,19 @@ async function loadPlaylist() {
   currentIndex = 0;
 
   if (player && isPlayerReady) {
+    player.stopVideo(); // force reload
     playRandomClip();
   } else {
     createPlayer();
   }
 }
 
-// Create YouTube player
+// YouTube API callback
 function onYouTubeIframeAPIReady() {
-  loadPlaylist(); // ✅ Autoload when API is ready
+  loadPlaylist(); // autoplay on load
 }
 
+// Create player
 function createPlayer() {
   player = new YT.Player("player", {
     height: "360",
@@ -91,18 +128,24 @@ function createPlayer() {
   });
 }
 
-// Get random clip start time (between 1 min and 25 min)
-function getRandomStart() {
-  return Math.floor(60 + Math.random() * (1500 - 60)); // 60s to 1500s
+// Get a random safe start time
+function getRandomStart(videoDuration) {
+  const clipLength = 90;
+  const maxStart = Math.max(videoDuration - clipLength, 5); // Avoid negatives
+  return Math.floor(Math.random() * maxStart);
 }
 
-// Play 90-second random clip
+// Play a 90-second clip
 function playRandomClip() {
   if (timeoutId) clearTimeout(timeoutId);
 
-  const vid = videoList[currentIndex].id;
-  const start = getRandomStart();
-  player.loadVideoById({ videoId: vid, startSeconds: start });
+  const video = videoList[currentIndex];
+  const start = getRandomStart(video.duration);
+
+  player.loadVideoById({
+    videoId: video.id,
+    startSeconds: start
+  });
 
   timeoutId = setTimeout(() => {
     currentIndex = (currentIndex + 1) % videoList.length;
@@ -110,17 +153,16 @@ function playRandomClip() {
   }, 90000); // 90 seconds
 }
 
-// Manual skip button
+// Skip to next video manually
 function skipToNext() {
   if (timeoutId) clearTimeout(timeoutId);
   currentIndex = (currentIndex + 1) % videoList.length;
   playRandomClip();
 }
 
-// Playlist switcher
+// Switch between playlist buttons
 function switchPlaylist(name) {
   if (!PLAYLISTS[name]) return alert("Playlist not found");
   PLAYLIST_ID = PLAYLISTS[name];
   loadPlaylist();
 }
-
