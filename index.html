@@ -1,71 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>YouTube ClipShuffler</title>
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <style>
-    body { font-family: sans-serif; text-align: center; padding: 2em; }
-    iframe { margin-top: 2em; }
-  </style>
+  <title>ClipShuffler</title>
 </head>
 <body>
-  <h1>🎧 YouTube ClipShuffler</h1>
-  <p>Plays 1-minute random segments of each video in your list.</p>
-  <div id="player"></div>
+  <h1>🎵 YouTube ClipShuffler</h1>
 
-  <script>
-    const videoList = [
-      't--n9zxJRWM',
-      'e_usPJNFrDU',
-      'jidqrehoZgI'
-    ];
+  <textarea id="playlistInput" rows="5" cols="60" placeholder="Paste YouTube URLs here, one per line"></textarea><br>
+  <button onclick="loadPlaylist()">Load Playlist</button>
+  <button onclick="skipToNext()">⏭️ Skip</button>
 
-    let player;
-    let currentIndex = 0;
+  <div id="player" style="margin-top: 20px;"></div>
 
-    function getRandomStartTime() {
-      return Math.floor(30 + Math.random() * 120); // between 30s and 150s
-    }
-
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        height: '390',
-        width: '640',
-        videoId: videoList[currentIndex],
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    }
-
-    function onPlayerReady(event) {
-      playRandomSegment();
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.ENDED) {
-        nextVideo();
-      }
-    }
-
-    function playRandomSegment() {
-      const startTime = getRandomStartTime();
-      player.loadVideoById({
-        videoId: videoList[currentIndex],
-        startSeconds: startTime
-      });
-      setTimeout(() => {
-        player.stopVideo();
-        nextVideo();
-      }, 60000); // play for 60s
-    }
-
-    function nextVideo() {
-      currentIndex = (currentIndex + 1) % videoList.length;
-      playRandomSegment();
-    }
-  </script>
+  <script src="script.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
