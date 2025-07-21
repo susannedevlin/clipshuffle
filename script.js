@@ -102,7 +102,7 @@ function playRandomClip() {
   timeoutId = setTimeout(() => {
     currentIndex = (currentIndex + 1) % videoList.length;
     playRandomClip();
-  }, 60000);
+  }, 90000);
 }
 
 // Manual skip button (if you keep one)
