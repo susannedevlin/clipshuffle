@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- Make it responsive -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ClipShuffler</title>
-  <!-- Link your stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1>🎵 YouTube ClipShuffler</h1>
 
-    <textarea id="playlistInput" placeholder="Paste YouTube URLs here, one per line"></textarea>
-
     <div class="controls">
+      <!-- You can change that default value to your playlist -->
+      <input id="playlistIdInput"
+             placeholder="YouTube Playlist ID"
+             value="PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR" />
       <button id="loadBtn" onclick="loadPlaylist()">Load Playlist</button>
       <button id="skipBtn" onclick="skipToNext()">⏭️ Skip</button>
     </div>
