@@ -119,6 +119,7 @@ function skipToNext() {
 
 // Playlist switcher
 function switchPlaylist(name) {
+    console.log("Switching to playlist:", name);
   if (!PLAYLISTS[name]) return alert("Playlist not found");
   PLAYLIST_ID = PLAYLISTS[name];
   loadPlaylist();
