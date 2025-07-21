@@ -1,20 +1,12 @@
 // ── CONFIG ─────────────────────────────────────
-const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8"; // Replace with your actual API key
-let PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // default
+const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8";
 
+let PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // default
 const PLAYLISTS = {
   "Latin": "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR",
-  "Music Mixes": "PLfrFfCKLZiB63G86e-6IS-e-vQTmnqg7A" // replace with second playlist
+  "Music Mixes": "PLfrFfCKLZiB63G86e-6IS-e-vQTmnqg7A"
 };
 // ───────────────────────────────────────────────
-
-let PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // default
-
-const PLAYLISTS = {
-  "Calm Vibes": "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR",
-  "Pump Up": "PLabc123456789XYZ" // replace with second playlist
-};
-
 
 let videoList = [];
 let currentIndex = 0;
@@ -25,7 +17,6 @@ let isPlayerReady = false;
 // Shuffle function
 function shuffleArray(array) {
   let currentIndex = array.length, randomIndex;
-
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
@@ -33,7 +24,6 @@ function shuffleArray(array) {
       array[randomIndex], array[currentIndex]
     ];
   }
-
   return array;
 }
 
@@ -99,12 +89,12 @@ function createPlayer() {
   });
 }
 
-// Get random clip start time
+// Get random clip start time (between 1 min and 25 min)
 function getRandomStart() {
   return Math.floor(60 + Math.random() * (1500 - 60)); // 60s to 1500s
 }
 
-// Play 60-second random clip
+// Play 90-second random clip
 function playRandomClip() {
   if (timeoutId) clearTimeout(timeoutId);
 
@@ -115,19 +105,19 @@ function playRandomClip() {
   timeoutId = setTimeout(() => {
     currentIndex = (currentIndex + 1) % videoList.length;
     playRandomClip();
-  }, 90000);
+  }, 90000); // 90 seconds
 }
 
-// Manual skip button (if you keep one)
+// Manual skip button
 function skipToNext() {
   if (timeoutId) clearTimeout(timeoutId);
   currentIndex = (currentIndex + 1) % videoList.length;
   playRandomClip();
 }
 
+// Playlist switcher
 function switchPlaylist(name) {
   if (!PLAYLISTS[name]) return alert("Playlist not found");
   PLAYLIST_ID = PLAYLISTS[name];
-  loadPlaylist(); // Reloads and shuffles the new playlist
+  loadPlaylist();
 }
-
