@@ -2,6 +2,7 @@ let videoList = [];
 let currentIndex = 0;
 let player;
 let timeoutId = null;
+let isPlayerReady = false; // ✅ NEW
 
 function extractVideoId(url) {
   const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/);
@@ -13,15 +14,15 @@ function loadPlaylist() {
   const urls = raw.split("\n").map(line => line.trim()).filter(Boolean);
   videoList = urls.map(extractVideoId).filter(Boolean).map(id => ({ id }));
   currentIndex = 0;
+
   if (videoList.length === 0) {
     alert("No valid YouTube links found!");
     return;
   }
 
-  // Load first video
-  if (player && player.loadVideoById) {
+  if (player && isPlayerReady) {
     playRandomClip();
-  } else {
+  } else if (!player) {
     createPlayer();
   }
 }
@@ -33,6 +34,7 @@ function createPlayer() {
     videoId: videoList[currentIndex].id,
     events: {
       onReady: () => {
+        isPlayerReady = true; // ✅ Mark player as ready
         playRandomClip();
       },
     },
