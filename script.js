@@ -1,7 +1,20 @@
 // ── CONFIG ─────────────────────────────────────
 const YT_API_KEY = "AIzaSyBKj7GOQvp06PlTrSkrUQwsaIU1DrZM9i8"; // Replace with your actual API key
-const PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // Your fixed playlist
+let PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // default
+
+const PLAYLISTS = {
+  "Latin": "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR",
+  "Music Mixes": "PLfrFfCKLZiB63G86e-6IS-e-vQTmnqg7A" // replace with second playlist
+};
 // ───────────────────────────────────────────────
+
+let PLAYLIST_ID = "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR"; // default
+
+const PLAYLISTS = {
+  "Calm Vibes": "PLfrFfCKLZiB6snt1ULYIiDQ0SjwnP_QAR",
+  "Pump Up": "PLabc123456789XYZ" // replace with second playlist
+};
+
 
 let videoList = [];
 let currentIndex = 0;
